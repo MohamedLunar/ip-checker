@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP Checker</title>
+  <!-- Link to your PNG favicon -->
+  <link rel="icon" href="favicon.png" type="image/png">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #00ff00, #007fff, #8a2be2, #ff1493); /* Chroma (Rainbow) Gradient */
+      background-size: 300% 300%;
+      animation: gradientAnimation 10s ease infinite;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .card {
+      background-color: #ffffff;
+      color: #333;
+      border-radius: 12px;
+      padding: 20px 30px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      opacity: 0;
+      transform: scale(0.9);
+      animation: slideUp 0.5s forwards;
+    }
+
+    @keyframes slideUp {
+      0% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    button {
+      padding: 8px 18px;
+      font-size: 1em;
+      background-color: #2575fc; /* Blue background */
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      position: relative;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    button:hover {
+      background-color: #2575fc; /* Keeps it blue */
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button span {
+      position: relative;
+      z-index: 1;
+    }
+
+    #result p {
+      margin: 10px 0;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    #result {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Check Your IP Address</h1>
+    <button id="check-ip-btn" onclick="checkIP()"><span>Check Your IP</span></button>
+    <div id="result">
+      <p>Your IP Address: <span id="ip-address">Fetching...</span></p>
+      <button id="check-again-btn" onclick="checkIP()"><span>Check Again</span></button>
+    </div>
+  </div>
+
+  <script>
+    async function checkIP() {
+      const resultDiv = document.getElementById('result');
+      const ipAddressSpan = document.getElementById('ip-address');
+      const checkIpBtn = document.getElementById('check-ip-btn');
+
+      // Display loading text and show the result section
+      ipAddressSpan.textContent = 'Fetching...';
+      resultDiv.style.display = 'block';
+      checkIpBtn.style.display = 'none';
+
+      try {
+        // Using ip-api's JSON endpoint to get IP information
+        const response = await fetch('https://api.ipify.org?format=json');
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        // Update the displayed IP
+        ipAddressSpan.textContent = data.ip;
+      } catch (error) {
+        ipAddressSpan.textContent = 'Unable to fetch IP. Try again later.';
+        console.error('Error fetching data:', error);
+      }
+    }
+  </script>
+</body>
+</html>
